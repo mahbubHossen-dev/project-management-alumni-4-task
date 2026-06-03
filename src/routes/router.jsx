@@ -4,6 +4,8 @@ import Home from "../pages/Home/Home/Home";
 import AllProjects from "../pages/AllProjects/AllProjects";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
+import PrivateRoute from "./PrivateRoute";
+import Dashboard from "../pages/Dashboard/Dashboard/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -16,7 +18,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'allProjects',
-        Component: AllProjects,
+        element: <PrivateRoute><AllProjects></AllProjects></PrivateRoute>
       },
       {
         path: 'login',
@@ -28,6 +30,10 @@ const router = createBrowserRouter([
       }
     ]
   },
+  {
+    path: 'dashboard',
+    element: <PrivateRoute><Dashboard></Dashboard></PrivateRoute>
+  }
 ]);
 
 export default router;

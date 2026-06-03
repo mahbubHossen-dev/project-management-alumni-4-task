@@ -1,9 +1,11 @@
 import React from 'react';
 import useAuth from '../../hooks/useAuth';
+import { Navigate, useNavigate } from 'react-router';
 
 const Login = () => {
 
     const {loginUser} = useAuth()
+    const navigate = useNavigate()
 
     const handleLogin = (e) => {
         e.preventDefault()
@@ -13,7 +15,11 @@ const Login = () => {
 
         console.log(name, email, password)
         loginUser(email, password)
-        .then(result => console.log(result))
+        .then(result => {
+            if(result.user){
+                navigate('/dashboard')
+            }
+        })
         .catch(err => console.log(err))
     }
 
