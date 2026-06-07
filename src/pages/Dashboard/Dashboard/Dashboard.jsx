@@ -1,5 +1,6 @@
 import React from 'react';
 import DashboardMenus from '../Dashboard Menus/DashboardMenus';
+import { Outlet } from 'react-router';
 
 const Dashboard = () => {
     return (
@@ -11,7 +12,7 @@ const Dashboard = () => {
 
             {/* Content */}
             <div className='col-span-8'>
-                
+                <Outlet/>
             </div>
         </div>
     );
