@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import TaskForm from "../../components/TaskForm";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import AddTeamMember from "../../components/AddTeamMember";
 
 const AllProjects = () => {
 
@@ -12,7 +13,7 @@ const AllProjects = () => {
     const [search, setSearch] = useState('');
     const [sort, setSort] = useState('');
 
-    const { data: projects = [] } = useQuery({
+    const { data: projects = [], refetch } = useQuery({
         queryKey: [
             'projects',
             status,
@@ -154,10 +155,11 @@ const AllProjects = () => {
 
                                 <TaskForm
                                     project={project}
+                                    refetch={refetch}
                                 />
 
                             </div>
-
+                        
                         </div>
                     ))
                 }

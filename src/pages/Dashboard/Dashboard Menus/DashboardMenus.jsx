@@ -1,7 +1,12 @@
 
 import { NavLink } from 'react-router';
+import useRole from '../../../hooks/useRole';
 
 const DashboardMenus = () => {
+
+    const { role } = useRole()
+    console.log(role)
+
     return (
         <div>
             <div className="drawer lg:drawer-open">
@@ -16,13 +21,16 @@ const DashboardMenus = () => {
                     <label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
                     <ul className="menu bg-base-200 min-h-full w-80 p-4">
                         {/* Sidebar content here */}
-                        <li><NavLink>Dashboard Insights</NavLink></li>
-                        <li><NavLink to={'/dashboard/addProjects'}>Add Projects</NavLink></li>
-                        <li><NavLink to={'/dashboard/taskManagement'}>Task Management</NavLink></li>
-                        <li><NavLink to={'/dashboard/insights'}>Insights</NavLink></li>
-                        <li><NavLink to={'/dashboard/workloadSummery'}>Workload Summery</NavLink></li>
-                        <li><NavLink to={'/dashboard/allProjects'}>All Projects</NavLink></li>
-                        <li><NavLink to={'/dashboard/dashboardAnalytics'}>Dashboard Analytics</NavLink></li>
+                        {role === 'Admin' && <li><NavLink>Dashboard Insights</NavLink></li>}
+                        {role === 'Project Manager' && <>
+                            <li><NavLink to={'/dashboard/addProjects'}>Add Projects</NavLink></li>
+                            <li><NavLink to={'/dashboard/taskManagement'}>Task Management</NavLink></li>
+                            <li><NavLink to={'/dashboard/insights'}>Insights</NavLink></li>
+                            <li><NavLink to={'/dashboard/workloadSummery'}>Workload Summery</NavLink></li>
+                            <li><NavLink to={'/dashboard/allProjects'}>All Projects</NavLink></li>
+                            <li><NavLink to={'/dashboard/dashboardAnalytics'}>Dashboard Analytics</NavLink></li>
+                        </>}
+
                     </ul>
                 </div>
             </div>

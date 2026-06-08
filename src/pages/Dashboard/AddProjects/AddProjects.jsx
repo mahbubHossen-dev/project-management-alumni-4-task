@@ -18,7 +18,8 @@ const AddProjects = () => {
             deadline: form.deadline.value,
             status: form.status.value,
             createdBy: user?.displayName,
-            createdAt: new Date()
+            createdAt: new Date(),
+            
         };
         console.log(projectData);
 
@@ -42,7 +43,7 @@ const AddProjects = () => {
 
         console.log(projectData);
     };
-
+    
     return (
         <div className="max-w-2xl mx-auto p-6">
             <h2 className="text-3xl font-bold mb-6">
@@ -115,6 +116,7 @@ const AddProjects = () => {
                 >
                     Create Project
                 </button>
+                
 
             </form>
         </div>

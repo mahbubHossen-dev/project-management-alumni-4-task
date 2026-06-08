@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router';
 import useAuth from '../hooks/useAuth';
+import useRole from '../hooks/useRole';
 
 const Navbar = () => {
     const { user, logoutUser } = useAuth()
-    console.log(user)
-
+    // const role = useRole()
     const links = <>
         <li><NavLink to={'/'}>Home</NavLink></li>
         {/* <li><NavLink to={'allProjects'}>All Projects</NavLink></li> */}

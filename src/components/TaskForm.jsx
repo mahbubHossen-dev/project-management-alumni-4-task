@@ -1,7 +1,9 @@
 import Swal from "sweetalert2";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 
-const TaskForm = ({ project }) => {
+import AddTeamMember from "./AddTeamMember";
+
+const TaskForm = ({ project,refetch }) => {
     const axiosSecure = useAxiosSecure();
 
     const handleTask = async (e) => {
@@ -45,6 +47,8 @@ const TaskForm = ({ project }) => {
             });
         }
     };
+
+
 
     return (
         <div>
@@ -144,8 +148,25 @@ const TaskForm = ({ project }) => {
                             </button>
                         </div>
                     </form>
+
                 </div>
             </dialog>
+
+            <div className="mt-4">
+                <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() =>
+                        document
+                            .getElementById(`member_modal_3`)
+                            .showModal()
+                    }
+                >
+                    Add Team Member
+                </button>
+            </div>
+
+            <AddTeamMember project={project} refetch={refetch}/>
         </div>
     );
 };
