@@ -1,9 +1,9 @@
 
 // import useAuth from "../../hooks/useAuth"
 
-import { useNavigate } from "react-router"
+import { Link, useNavigate } from "react-router"
 import useAuth from "../../hooks/useAuth"
-import axios from "axios"
+
 import useAxiosSecure from "../../hooks/useAxiosSecure"
 
 const Register = () => {
@@ -36,6 +36,8 @@ const Register = () => {
                         .then(res => console.log(res))
                         .catch(err => console.log(err))
                 }
+
+                navigate('/dashboard')
             })
             .catch(err => console.log(err))
     }
@@ -56,6 +58,7 @@ const Register = () => {
                                 <button className="btn btn-neutral mt-4">Register</button>
                             </fieldset>
                         </div>
+                        <Link className='text-center mx-auto pb-4' to={'/login'}>Already have and account? Login</Link>
                     </div>
                 </div>
             </div>

@@ -1,48 +1,133 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useAuth from '../../hooks/useAuth';
-import { Navigate, useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 const Login = () => {
 
-    const {loginUser} = useAuth()
-    const navigate = useNavigate()
+    const { loginUser } = useAuth();
+    const navigate = useNavigate();
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const fillCredential = (role) => {
+        if (role === 'admin') {
+            setEmail('admin@gmail.com');
+            setPassword('123456');
+        }
+
+        if (role === 'manager') {
+            setEmail('projectmanager@gmail.com');
+            setPassword('123456');
+        }
+
+        if (role === 'member') {
+            setEmail('member@gmail.com');
+            setPassword('123456');
+        }
+    };
 
     const handleLogin = (e) => {
-        e.preventDefault()
-        const name = e.target.name.value
-        const email = e.target.email.value
-        const password = e.target.password.value
+        e.preventDefault();
 
-        console.log(name, email, password)
         loginUser(email, password)
-        .then(result => {
-            if(result.user){
-                navigate('/dashboard')
-            }
-        })
-        .catch(err => console.log(err))
-    }
+            .then(result => {
+                if (result.user) {
+                    navigate('/dashboard');
+                }
+            })
+            .catch(err => console.log(err));
+    };
 
     return (
         <div>
             <form onSubmit={handleLogin}>
-                <div className=" bg-base-200 min-h-screen">
-                    <div className="mx-auto flex-col lg:flex-row-reverse pt-16 ">
-                        
-                        
+                <div className="bg-base-200 min-h-screen">
+                    <div className="mx-auto flex-col lg:flex-row-reverse pt-16">
+
                         <div className="card mx-auto bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
                             <div className="card-body">
-                                <h1 className='text-center text-2xl font-bold'>Login</h1>
-                                {/* <button>Login Credentials</button> */}
+
+                                <h1 className='text-center text-2xl font-bold'>
+                                    Login
+                                </h1>
+
+                                <div className="flex gap-2 mb-4">
+
+                                    <button
+                                        type="button"
+                                        onClick={() => fillCredential('admin')}
+                                        className="btn btn-sm btn-primary"
+                                    >
+                                        Admin Login
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => fillCredential('manager')}
+                                        className="btn btn-sm btn-secondary"
+                                    >
+                                        Manager Login
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => fillCredential('member')}
+                                        className="btn btn-sm btn-accent"
+                                    >
+                                        Member Login
+                                    </button>
+
+                                </div>
+
                                 <fieldset className="fieldset">
+
                                     <label className="label">Email</label>
-                                    <input name='email' type="email" className="input" placeholder="Email" />
-                                    <label className="label">Password</label>
-                                    <input name='password' type="password" className="input" placeholder="Password" />
-                                    <div><a className="link link-hover">Forgot password?</a></div>
-                                    <button className="btn btn-neutral mt-4">Login</button>
+
+                                    <input
+                                        type="email"
+                                        className="input"
+                                        placeholder="Email"
+                                        value={email}
+                                        onChange={(e) =>
+                                            setEmail(e.target.value)
+                                        }
+                                    />
+
+                                    <label className="label">
+                                        Password
+                                    </label>
+
+                                    <input
+                                        type="password"
+                                        className="input"
+                                        placeholder="Password"
+                                        value={password}
+                                        onChange={(e) =>
+                                            setPassword(e.target.value)
+                                        }
+                                    />
+
+                                    <div>
+                                        <a className="link link-hover">
+                                            Forgot password?
+                                        </a>
+                                    </div>
+
+                                    <button className="btn btn-neutral mt-4">
+                                        Login
+                                    </button>
+
                                 </fieldset>
                             </div>
+
+                            <Link
+                                className='text-center mx-auto pb-4'
+                                to='/register'
+                            >
+                                Don't have an account? Register
+                            </Link>
+
                         </div>
                     </div>
                 </div>

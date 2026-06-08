@@ -21,7 +21,7 @@ const AddProjects = () => {
             createdAt: new Date(),
             
         };
-        console.log(projectData);
+        // console.log(projectData);
 
         try {
             const data = await axiosSecure.post('/projects', projectData)
@@ -36,14 +36,14 @@ const AddProjects = () => {
 
                 form.reset();
             }
-            console.log(data)
+            // console.log(data)
         } catch (error) {
             console.log(error)
         }
 
-        console.log(projectData);
+        // console.log(projectData);
     };
-    
+
     return (
         <div className="max-w-2xl mx-auto p-6">
             <h2 className="text-3xl font-bold mb-6">

@@ -1,21 +1,29 @@
 import { useState } from "react";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
+import useRole from "../hooks/useRole";
 
 const Card = ({ task, refetch }) => {
 
     const [selectedTask, setSelectedTask] = useState(null);
 
     const axiosSecure = useAxiosSecure();
+    const { role } = useRole()
 
-    // Edit Modal Open
 
     const handleEditTask = () => {
+         if (task.status === "Completed") {
+
+        return Swal.fire({
+            icon: "warning",
+            title: "Task Completed",
+            text: "You can't edit or assign a new member because the task was completed.",
+            confirmButtonText: "OK"
+        });
+    }
         setSelectedTask(task);
         document.getElementById("edit_modal_2").showModal();
     };
-
-    // Update Task
 
     const updateTask = async (e) => {
 
@@ -247,29 +255,34 @@ const Card = ({ task, refetch }) => {
 
                 {/* Buttons */}
 
-                <div className="mt-5 flex gap-2">
+                {
+                    (role === 'Admin' || role === 'Project Manager') && (
+                        <div className="mt-5 flex gap-2">
 
-                    <button
-                        onClick={handleEditTask}
-                        className="rounded bg-blue-500 px-4 py-2 text-white"
-                    >
-                        Edit
-                    </button>
+                            <button
+                                onClick={handleEditTask}
+                                className="rounded bg-blue-500 px-4 py-2 text-white"
+                                
+                            >
+                                Edit
+                            </button>
 
-                    <button
-                        onClick={() =>
-                            handleDeleteTask(task._id)
-                        }
-                        className="rounded bg-red-500 px-4 py-2 text-white"
-                    >
-                        Delete
-                    </button>
+                            <button
+                                onClick={() =>
+                                    handleDeleteTask(task._id)
+                                }
+                                className="rounded bg-red-500 px-4 py-2 text-white"
+                            >
+                                Delete
+                            </button>
 
-                </div>
+                        </div>
+                    )
+                }
 
             </div>
 
-            {/* Edit Modal */}
+  
 
             <dialog
                 id="edit_modal_2"

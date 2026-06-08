@@ -1,11 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-
+import TaskPriorityChart from "../../../components/TaskPriorityChart";
+import TaskStatusChart from "../../../components/TaskStatusChart";
+import TeamProductivityChart from "../../../components/TeamProductivityChart";
+import ProjectProgressChart from "../../../components/ProjectProgressChart";
 
 const DashboardAnalytics = () => {
 
-    const axiosSecure= useAxiosSecure()
-    
+    const axiosSecure = useAxiosSecure()
+
     const { data: stats = {} } = useQuery({
         queryKey: ['dashboard-stats'],
         queryFn: async () => {
@@ -52,6 +55,17 @@ const DashboardAnalytics = () => {
                         {stats.overdueTasks || 0}
                     </p>
                 </div>
+
+            </div>
+            <div className="grid lg:grid-cols-2 gap-8 mt-10">
+
+                <TaskPriorityChart />
+
+                <TaskStatusChart />
+
+                <TeamProductivityChart />
+
+                <ProjectProgressChart />
 
             </div>
         </div>

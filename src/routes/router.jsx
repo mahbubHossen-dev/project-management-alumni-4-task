@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router";
-import RootLayout from "../layouts/RootLayout";
-import Home from "../pages/Home/Home/Home";
+
+
 import AllProjects from "../pages/AllProjects/AllProjects";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
@@ -11,17 +11,28 @@ import TaskManagement from "../pages/Dashboard/TaskManagement/TaskManagement";
 import Insight from "../pages/Dashboard/insight/Insight";
 import WorkloadSummery from "../pages/Dashboard/WorkloadSummery/WorkloadSummery";
 import DashboardAnalytics from "../pages/Dashboard/DashboardAndAnalytics/DashboardAnalytics";
+import AdminRoute from "./AdminRoute";
+import HomeRedirect from "../components/HomeRedirect";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    Component: RootLayout,
+    element: <HomeRedirect />,
+  },
+
+  {
+    path: "/login",
+    Component: Login,
+  },
+
+  {
+    path: "/register",
+    Component: Register,
+  },
+  {
+    path: 'dashboard',
+    element: <PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
     children: [
-      {
-        index: true,
-        Component: Home
-      },
-      
       {
         path: 'login',
         Component: Login,
@@ -29,38 +40,32 @@ const router = createBrowserRouter([
       {
         path: 'register',
         Component: Register,
-      }
-    ]
-  },
-  {
-    path: 'dashboard',
-    element: <PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
-    children: [
+      },
       {
         path: 'addProjects',
-        element: <AddProjects />,
+        element:<PrivateRoute><AddProjects /></PrivateRoute> ,
       },
       {
         path: 'taskManagement',
-        element: <TaskManagement />,
+        element: <PrivateRoute> <TaskManagement /></PrivateRoute>,
       },
       {
         path: 'insights',
-        element: <Insight />,
+        element: <PrivateRoute><AdminRoute><Insight /></AdminRoute></PrivateRoute> ,
       },
       {
         path: 'workloadSummery',
-        element: <WorkloadSummery />,
+        element: <PrivateRoute><WorkloadSummery /></PrivateRoute>,
       },
       {
         path: 'dashboardAnalytics',
-        element: <DashboardAnalytics />,
+        element: <PrivateRoute><DashboardAnalytics /></PrivateRoute> ,
       },
       {
         path: 'allProjects',
         element: <PrivateRoute><AllProjects></AllProjects></PrivateRoute>,
         loader: async () => {
-          const res = await fetch('http://localhost:3000/projects');
+          const res = await fetch('https://alumni-4-task-server.onrender.com/projects');
           return res.json();
         }
       },

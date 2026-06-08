@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import Swal from "sweetalert2";
 import TaskForm from "../../components/TaskForm";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import AddTeamMember from "../../components/AddTeamMember";
 
 const AllProjects = () => {
 
@@ -13,35 +13,163 @@ const AllProjects = () => {
     const [search, setSearch] = useState('');
     const [sort, setSort] = useState('');
 
-    const { data: projects = [], refetch } = useQuery({
-        queryKey: [
-            'projects',
-            status,
-            deadlineStatus,
-            search,
-            sort
-        ],
+    const [selectedProject, setSelectedProject] =
+        useState(null);
 
-        queryFn: async () => {
+    const { data: projects = [], refetch } =
+        useQuery({
+            queryKey: [
+                'projects',
+                status,
+                deadlineStatus,
+                search,
+                sort
+            ],
+
+            queryFn: async () => {
+
+                const { data } =
+                    await axiosSecure.get('/projects', {
+                        params: {
+                            status,
+                            deadlineStatus,
+                            search,
+                            sort
+                        }
+                    });
+
+                return data;
+            }
+        });
+
+    // DELETE PROJECT
+
+    const handleDeleteProject = async (id) => {
+
+        const result = await Swal.fire({
+            title: "Are you sure?",
+            text: "This project will be deleted permanently!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, Delete"
+        });
+
+        if (!result.isConfirmed) return;
+
+        try {
 
             const { data } =
-                await axiosSecure.get('/projects', {
-                    params: {
-                        status,
-                        deadlineStatus,
-                        search,
-                        sort
-                    }
+                await axiosSecure.delete(
+                    `/projects/${id}`
+                );
+
+            if (data.deletedCount > 0) {
+
+                Swal.fire({
+                    icon: "success",
+                    title: "Project Deleted",
+                    timer: 1500,
+                    showConfirmButton: false
                 });
 
-            return data;
+                refetch();
+            }
+
+        } catch (error) {
+
+            Swal.fire({
+                icon: "error",
+                title: "Delete Failed",
+                text:
+                    error.response?.data?.message ||
+                    "Something went wrong"
+            });
         }
-    });
+    };
+
+    // OPEN UPDATE MODAL
+
+    const handleUpdateProject = (project) => {
+
+        setSelectedProject(project);
+
+        document
+            .getElementById(
+                "update_project_modal"
+            )
+            .showModal();
+    };
+
+    // UPDATE PROJECT
+
+    const handleProjectUpdate = async (e) => {
+
+        e.preventDefault();
+
+        const form = e.target;
+
+        const updatedProject = {
+
+            projectName:
+                form.projectName.value,
+
+            description:
+                form.description.value,
+
+            deadline:
+                form.deadline.value,
+
+            status:
+                form.status.value
+        };
+
+        try {
+
+            const { data } =
+                await axiosSecure.patch(
+                    `/projects/${selectedProject._id}`,
+                    updatedProject
+                );
+
+            if (
+                data.modifiedCount > 0
+            ) {
+
+                document
+                    .getElementById(
+                        "update_project_modal"
+                    )
+                    .close();
+
+                Swal.fire({
+                    icon: "success",
+                    title:
+                        "Project Updated Successfully",
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+
+                refetch();
+            }
+
+        } catch (error) {
+
+            Swal.fire({
+                icon: "error",
+                title: "Update Failed",
+                text:
+                    error.response?.data?.message ||
+                    "Something went wrong"
+            });
+        }
+    };
 
     return (
         <div className="max-w-7xl mx-auto py-10">
 
-            {/* Filters */}
+            {/* FILTERS */}
 
             <div className="flex flex-wrap gap-4 mb-10">
 
@@ -50,14 +178,18 @@ const AllProjects = () => {
                     placeholder="Search Project"
                     className="input input-bordered"
                     onChange={(e) =>
-                        setSearch(e.target.value)
+                        setSearch(
+                            e.target.value
+                        )
                     }
                 />
 
                 <select
                     className="select select-bordered"
                     onChange={(e) =>
-                        setStatus(e.target.value)
+                        setStatus(
+                            e.target.value
+                        )
                     }
                 >
                     <option value="">
@@ -101,7 +233,9 @@ const AllProjects = () => {
                 <select
                     className="select select-bordered"
                     onChange={(e) =>
-                        setSort(e.target.value)
+                        setSort(
+                            e.target.value
+                        )
                     }
                 >
                     <option value="">
@@ -115,7 +249,7 @@ const AllProjects = () => {
 
             </div>
 
-            {/* Projects */}
+            {/* PROJECTS */}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
 
@@ -129,26 +263,38 @@ const AllProjects = () => {
 
                             <div className="card-body">
 
-                                <h2 className="card-title">
+                                <h2 className="card-title flex justify-between">
 
-                                    {project.projectName}
+                                    <p>
+                                        {
+                                            project.projectName
+                                        }
+                                    </p>
 
                                     <div className="badge badge-secondary">
-                                        {project.status}
+                                        {
+                                            project.status
+                                        }
                                     </div>
 
                                 </h2>
 
                                 <p>
-                                    {project.description}
+                                    {
+                                        project.description
+                                    }
                                 </p>
 
-                                <div className="card-actions justify-end">
+                                <div className="card-actions justify-end pt-4">
 
                                     <div className="badge badge-outline">
+
                                         Deadline:
                                         {" "}
-                                        {project.deadline}
+                                        {
+                                            project.deadline
+                                        }
+
                                     </div>
 
                                 </div>
@@ -158,13 +304,137 @@ const AllProjects = () => {
                                     refetch={refetch}
                                 />
 
+                                <div className="flex gap-2 mt-4">
+
+                                    <button
+                                        onClick={() =>
+                                            handleUpdateProject(
+                                                project
+                                            )
+                                        }
+                                        className="btn btn-info text-white"
+                                    >
+                                        Edit
+                                    </button>
+
+                                    <button
+                                        onClick={() =>
+                                            handleDeleteProject(
+                                                project._id
+                                            )
+                                        }
+                                        className="btn btn-error text-white"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </div>
+
                             </div>
-                        
+
                         </div>
                     ))
                 }
 
             </div>
+
+            {/* UPDATE MODAL */}
+
+            <dialog
+                id="update_project_modal"
+                className="modal"
+            >
+                <div className="modal-box max-w-2xl">
+
+                    <h3 className="font-bold text-2xl mb-5">
+                        Update Project
+                    </h3>
+
+                    <form
+                        onSubmit={
+                            handleProjectUpdate
+                        }
+                        className="space-y-4"
+                    >
+
+                        <input
+                            type="text"
+                            name="projectName"
+                            defaultValue={
+                                selectedProject?.projectName
+                            }
+                            className="input input-bordered w-full"
+                            required
+                        />
+
+                        <textarea
+                            name="description"
+                            defaultValue={
+                                selectedProject?.description
+                            }
+                            className="textarea textarea-bordered w-full"
+                            required
+                        />
+
+                        <input
+                            type="date"
+                            name="deadline"
+                            defaultValue={
+                                selectedProject?.deadline
+                            }
+                            className="input input-bordered w-full"
+                            required
+                        />
+
+                        <select
+                            name="status"
+                            defaultValue={
+                                selectedProject?.status
+                            }
+                            className="select select-bordered w-full"
+                        >
+                            <option value="Active">
+                                Active
+                            </option>
+
+                            <option value="Completed">
+                                Completed
+                            </option>
+
+                            <option value="On Hold">
+                                On Hold
+                            </option>
+                        </select>
+
+                        <div className="flex justify-end gap-2">
+
+                            <button
+                                type="button"
+                                className="btn"
+                                onClick={() =>
+                                    document
+                                        .getElementById(
+                                            "update_project_modal"
+                                        )
+                                        .close()
+                                }
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                type="submit"
+                                className="btn btn-primary"
+                            >
+                                Update Project
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </dialog>
 
         </div>
     );

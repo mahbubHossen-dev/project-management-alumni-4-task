@@ -120,7 +120,7 @@ const TaskForm = ({ project,refetch }) => {
                             className="select select-bordered w-full"
                             required
                         >
-                            <option value="">Select Status</option>
+                            <option value="">Select Statusss</option>
                             <option value="Todo">Todo</option>
                             <option value="In Progress">In Progress</option>
                             <option value="Completed">Completed</option>
@@ -155,7 +155,7 @@ const TaskForm = ({ project,refetch }) => {
             <div className="mt-4">
                 <button
                     type="button"
-                    className="btn btn-secondary"
+                    className="btn "
                     onClick={() =>
                         document
                             .getElementById(`member_modal_3`)

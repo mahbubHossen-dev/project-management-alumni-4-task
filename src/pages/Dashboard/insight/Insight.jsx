@@ -25,7 +25,7 @@ const Insight = () => {
 
     return (
         <div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mt-10">
 
                 <div className="bg-white shadow rounded-xl p-6">
                     <h3 className="text-gray-500">Total Projects</h3>
